@@ -23,39 +23,42 @@
 
       // Verifica si el navegador es compatible con la API getUserMedia
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        // Enumera los dispositivos multimedia
-        navigator.mediaDevices.enumerateDevices()
-          .then(function (devices) {
-            // Filtra solo los dispositivos de video
-            const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        // Pide permisos para acceder a la cámara
+        navigator.mediaDevices.getUserMedia({ video: true })
+          .then(function (stream) {
+            // Enumera los dispositivos multimedia
+            navigator.mediaDevices.enumerateDevices()
+              .then(function (devices) {
+                // Filtra solo los dispositivos de video
+                const videoDevices = devices.filter(device => device.kind === 'videoinput');
 
-            // Muestra la cantidad de cámaras disponibles y sus detalles en alertas
-            alert(`Número de cámaras disponibles: ${videoDevices.length}`);
-            videoDevices.forEach((device, index) => {
-              alert(`Cámara ${index + 1}:
+                // Muestra la cantidad de cámaras disponibles y sus detalles en alertas
+                alert(`Número de cámaras disponibles: ${videoDevices.length}`);
+                videoDevices.forEach((device, index) => {
+                  alert(`Cámara ${index + 1}:
 Nombre: ${device.label}
 ID: ${device.deviceId}
-Tipo: ${device.kind}`);
-            });
+Tipo: ${device.kind}
+Resolución: ${device.width}x${device.height}`);
+                });
 
-            // Usa la primera cámara disponible (puedes modificar esto según tus necesidades)
-            const videoOptions = {
-              video: {
-                deviceId: videoDevices.length > 0 ? { exact: videoDevices[0].deviceId } : undefined,
-              },
-            };
+                // Usa la primera cámara disponible (puedes modificar esto según tus necesidades)
+                const videoOptions = {
+                  video: {
+                    deviceId: videoDevices.length > 0 ? { exact: videoDevices[0].deviceId } : undefined,
+                  },
+                };
 
-            navigator.mediaDevices.getUserMedia(videoOptions)
-              .then(function (stream) {
                 // Asigna el flujo de la cámara al elemento de video
                 videoElement.srcObject = stream;
               })
               .catch(function (error) {
-                console.error('Error accessing camera:', error);
+                console.error('Error enumerating devices:', error);
               });
           })
           .catch(function (error) {
-            console.error('Error enumerating devices:', error);
+            console.error('Error accessing camera:', error);
+            alert('No se ha otorgado permiso para acceder a la cámara.');
           });
       } else {
         console.error('getUserMedia is not supported on your browser');
