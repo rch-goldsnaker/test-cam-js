@@ -29,14 +29,13 @@
             // Filtra solo los dispositivos de video
             const videoDevices = devices.filter(device => device.kind === 'videoinput');
 
-            // Imprime en la consola la cantidad de cámaras disponibles y sus detalles
-            console.log('Número de cámaras disponibles:', videoDevices.length);
+            // Muestra la cantidad de cámaras disponibles y sus detalles en alertas
+            alert(`Número de cámaras disponibles: ${videoDevices.length}`);
             videoDevices.forEach((device, index) => {
-              console.log(`Cámara ${index + 1}:`);
-              console.log('  Nombre:', device.label);
-              console.log('  ID:', device.deviceId);
-              console.log('  Tipo:', device.kind);
-              console.log('-------------------');
+              alert(`Cámara ${index + 1}:
+Nombre: ${device.label}
+ID: ${device.deviceId}
+Tipo: ${device.kind}`);
             });
 
             // Usa la primera cámara disponible (puedes modificar esto según tus necesidades)
